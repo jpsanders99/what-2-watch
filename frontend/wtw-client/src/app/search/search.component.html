@@ -1,0 +1,35 @@
+<div class="flex justify-content-center">
+    <form (ngSubmit)="search()" #searchForm="ngForm">
+        <span class="p-input-icon-left p-float-label">
+            <i class="pi pi-search"></i>
+            <input pInputText class="p-inputtext-lg" [(ngModel)]="query" name="query" id="query">
+            <label for="query">Search for tv shows or movies</label>
+        </span>
+        <p-button icon="pi pi-search" size="large" type="submit" [disabled]="!query" />
+    </form>
+</div>
+<ng-container *ngIf="(media$ | async) as results">
+    <ng-container *ngIf="results!.length > 0">
+        <p-dataView #dv [value]="results">
+            <ng-template pTemplate="list">
+                <div class="grid grid-nogutter">
+                    <div class="col-12" *ngFor="let item of results; let first = first">
+                        <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4"
+                            [ngClass]="{ 'border-top-1 surface-border': !first }">
+                            <img class="w-9 sm:w-16rem xl:w-5rem shadow-2 block xl:block mx-auto border-round"
+                                [src]="'https://image.tmdb.org/t/p/w200/' + item.poster_path" [alt]="item.title" />
+                            <div
+                                class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
+                                <div class="flex flex-column align-items-center sm:align-items-start gap-3">
+                                    <div class="text-2xl font-bold text-900">{{ item.title }}</div>
+                                    <div class="text-1xl text-900">{{ item.year }}</div>
+                                    <p-rating [(ngModel)]="item.rating" [readonly]="true" [cancel]="false"></p-rating>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </p-dataView>
+    </ng-container>
+</ng-container>
